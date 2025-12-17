@@ -144,7 +144,7 @@ func (p *Player) drawHealthBar(screen *ebiten.Image) {
 
 	// Health
 	healthWidth := barWidth * p.Health.GetPercentage()
-	
+
 	// Only draw health bar if there's health remaining
 	if healthWidth > 0 {
 		healthColor := color.RGBA{R: 100, G: 255, B: 100, A: 255}
