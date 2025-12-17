@@ -121,11 +121,11 @@ type Visual struct {
 
 // Weapon component
 type Weapon struct {
-	Damage        int
-	FireRate      float64
-	BulletSpeed   float64
-	LastFireTime  float64
-	CurrentTime   float64
+	Damage         int
+	FireRate       float64
+	BulletSpeed    float64
+	LastFireTime   float64
+	CurrentTime    float64
 	ProjectileType ProjectileType
 }
 

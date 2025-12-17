@@ -32,7 +32,7 @@ func TestPlayerMovement(t *testing.T) {
 
 	// Directly set position to test movement works
 	player.Position = vector.New(100, 50)
-	
+
 	if player.Position.Y >= initialPos.Y {
 		t.Error("Player position should be movable")
 	}

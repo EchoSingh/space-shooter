@@ -53,15 +53,14 @@ type Star struct {
 
 // NewGame creates a new game instance
 func NewGame(screenWidth, screenHeight int) (*Game, error) {
-	rand.Seed(time.Now().UnixNano())
 
 	g := &Game{
-		screenWidth:  screenWidth,
-		screenHeight: screenHeight,
-		stateManager: engine.NewStateManager(),
-		enemies:      make([]*entities.Enemy, 0, 50),
-		bullets:      make([]*entities.Bullet, 0, 100),
-		particles:    make([]*entities.Particle, 0, 200),
+		screenWidth:     screenWidth,
+		screenHeight:    screenHeight,
+		stateManager:    engine.NewStateManager(),
+		enemies:         make([]*entities.Enemy, 0, 50),
+		bullets:         make([]*entities.Bullet, 0, 100),
+		particles:       make([]*entities.Particle, 0, 200),
 		collisionSystem: physics.NewCollisionSystem(),
 		ui:              ui.NewUI(screenWidth, screenHeight),
 		spawnInterval:   2.0,
@@ -181,7 +180,8 @@ func (g *Game) updatePlaying(dt float64) {
 
 	// Update player
 	if err := g.player.Update(dt); err != nil {
-		return
+		// Log error but continue game
+		_ = err
 	}
 
 	// Handle player firing
@@ -237,7 +237,7 @@ func (g *Game) updateEnemies(dt float64) {
 			g.enemies = append(g.enemies[:i], g.enemies[i+1:]...)
 			continue
 		}
-		enemy.Update(dt)
+		_ = enemy.Update(dt)
 	}
 }
 
@@ -248,7 +248,7 @@ func (g *Game) updateBullets(dt float64) {
 			g.bullets = append(g.bullets[:i], g.bullets[i+1:]...)
 			continue
 		}
-		bullet.Update(dt)
+		_ = bullet.Update(dt)
 	}
 }
 
@@ -259,7 +259,7 @@ func (g *Game) updateParticles(dt float64) {
 			g.particles = append(g.particles[:i], g.particles[i+1:]...)
 			continue
 		}
-		particle.Update(dt)
+		_ = particle.Update(dt)
 	}
 }
 
@@ -384,7 +384,11 @@ func (g *Game) Draw(screen *ebiten.Image) {
 
 func (g *Game) drawStars(screen *ebiten.Image) {
 	for _, star := range g.stars {
-		ebitenutil.DrawRect(screen, star.X, star.Y, star.Size, star.Size, star.Color)
+		img := ebiten.NewImage(int(star.Size), int(star.Size))
+		img.Fill(star.Color)
+		op := &ebiten.DrawImageOptions{}
+		op.GeoM.Translate(star.X, star.Y)
+		screen.DrawImage(img, op)
 	}
 }
 

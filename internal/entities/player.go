@@ -5,7 +5,6 @@ import (
 
 	"github.com/EchoSingh/space-shooter/pkg/vector"
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 )
 
 const (
@@ -115,14 +114,16 @@ func (p *Player) handleInput() {
 
 // Draw draws the player
 func (p *Player) Draw(screen *ebiten.Image) {
-	// Draw player ship as a triangle
+	// Draw player ship as a simple circle for now
 	x, y := float32(p.Position.X), float32(p.Position.Y)
-	w, h := float32(p.Visual.Width/2), float32(p.Visual.Height/2)
+	w := float32(p.Visual.Width / 2)
 
-	// Ship body (triangle pointing up)
-	ebitenutil.DrawLine(screen, float64(x), float64(y-h), float64(x-w), float64(y+h), p.Visual.Color)
-	ebitenutil.DrawLine(screen, float64(x), float64(y-h), float64(x+w), float64(y+h), p.Visual.Color)
-	ebitenutil.DrawLine(screen, float64(x-w), float64(y+h), float64(x+w), float64(y+h), p.Visual.Color)
+	// Draw simple representation
+	img := ebiten.NewImage(int(w*2), int(w*2))
+	img.Fill(p.Visual.Color)
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Translate(float64(x-w), float64(y-w))
+	screen.DrawImage(img, op)
 
 	// Draw health bar
 	p.drawHealthBar(screen)
@@ -135,7 +136,11 @@ func (p *Player) drawHealthBar(screen *ebiten.Image) {
 	y := p.Position.Y + p.Visual.Height/2 + 10
 
 	// Background
-	ebitenutil.DrawRect(screen, x, y, barWidth, barHeight, color.RGBA{R: 50, G: 50, B: 50, A: 255})
+	bgImg := ebiten.NewImage(int(barWidth), int(barHeight))
+	bgImg.Fill(color.RGBA{R: 50, G: 50, B: 50, A: 255})
+	bgOp := &ebiten.DrawImageOptions{}
+	bgOp.GeoM.Translate(x, y)
+	screen.DrawImage(bgImg, bgOp)
 
 	// Health
 	healthWidth := barWidth * p.Health.GetPercentage()
@@ -145,7 +150,11 @@ func (p *Player) drawHealthBar(screen *ebiten.Image) {
 	} else if p.Health.GetPercentage() < 0.6 {
 		healthColor = color.RGBA{R: 255, G: 255, B: 100, A: 255}
 	}
-	ebitenutil.DrawRect(screen, x, y, healthWidth, barHeight, healthColor)
+	healthImg := ebiten.NewImage(int(healthWidth), int(barHeight))
+	healthImg.Fill(healthColor)
+	healthOp := &ebiten.DrawImageOptions{}
+	healthOp.GeoM.Translate(x, y)
+	screen.DrawImage(healthImg, healthOp)
 }
 
 // IsFiring returns whether the player is firing

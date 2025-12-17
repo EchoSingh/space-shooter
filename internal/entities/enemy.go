@@ -7,7 +7,6 @@ import (
 
 	"github.com/EchoSingh/space-shooter/pkg/vector"
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 )
 
 // EnemyType represents different enemy types
@@ -152,12 +151,14 @@ func (e *Enemy) Update(dt float64) error {
 // Draw draws the enemy
 func (e *Enemy) Draw(screen *ebiten.Image) {
 	x, y := float32(e.Position.X), float32(e.Position.Y)
-	w, h := float32(e.Visual.Width/2), float32(e.Visual.Height/2)
+	w := float32(e.Visual.Width / 2)
 
-	// Draw enemy ship (inverted triangle)
-	ebitenutil.DrawLine(screen, float64(x), float64(y+h), float64(x-w), float64(y-h), e.Visual.Color)
-	ebitenutil.DrawLine(screen, float64(x), float64(y+h), float64(x+w), float64(y-h), e.Visual.Color)
-	ebitenutil.DrawLine(screen, float64(x-w), float64(y-h), float64(x+w), float64(y-h), e.Visual.Color)
+	// Draw enemy as simple square
+	img := ebiten.NewImage(int(w*2), int(w*2))
+	img.Fill(e.Visual.Color)
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Translate(float64(x-w), float64(y-w))
+	screen.DrawImage(img, op)
 }
 
 // OnCollision handles collision

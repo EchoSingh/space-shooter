@@ -6,7 +6,6 @@ import (
 
 	"github.com/EchoSingh/space-shooter/pkg/vector"
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 )
 
 // Particle represents a visual effect particle
@@ -75,7 +74,11 @@ func (p *Particle) Draw(screen *ebiten.Image) {
 	x, y := p.Position.X, p.Position.Y
 	size := p.Visual.Width
 
-	ebitenutil.DrawRect(screen, x-size/2, y-size/2, size, size, particleColor)
+	img := ebiten.NewImage(int(size), int(size))
+	img.Fill(particleColor)
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Translate(x-size/2, y-size/2)
+	screen.DrawImage(img, op)
 }
 
 // CreateExplosion creates explosion particles

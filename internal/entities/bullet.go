@@ -5,7 +5,6 @@ import (
 
 	"github.com/EchoSingh/space-shooter/pkg/vector"
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 )
 
 // BulletOwner represents who fired the bullet
@@ -83,7 +82,11 @@ func (b *Bullet) Draw(screen *ebiten.Image) {
 	x, y := b.Position.X, b.Position.Y
 	w, h := b.Visual.Width/2, b.Visual.Height/2
 
-	ebitenutil.DrawRect(screen, x-w, y-h, b.Visual.Width, b.Visual.Height, b.Visual.Color)
+	img := ebiten.NewImage(int(b.Visual.Width), int(b.Visual.Height))
+	img.Fill(b.Visual.Color)
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Translate(x-w, y-h)
+	screen.DrawImage(img, op)
 }
 
 // OnCollision handles collision

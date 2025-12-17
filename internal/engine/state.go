@@ -12,14 +12,14 @@ const (
 
 // StateManager manages game states
 type StateManager struct {
-	currentState GameState
+	currentState  GameState
 	previousState GameState
 }
 
 // NewStateManager creates a new state manager
 func NewStateManager() *StateManager {
 	return &StateManager{
-		currentState: StateMenu,
+		currentState:  StateMenu,
 		previousState: StateMenu,
 	}
 }
