@@ -35,7 +35,9 @@ jobs:
       
       - name: Build WASM
         run: |
-          GOOS=js GOARCH=wasm go build -o web/game.wasm cmd/game/main.go
+          export GOOS=js
+          export GOARCH=wasm
+          go build -tags=wasm -ldflags="-s -w" -o web/game.wasm cmd/game/main.go
           cp "$(go env GOROOT)/misc/wasm/wasm_exec.js" web/
       
       - name: Upload artifact

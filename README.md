@@ -2,6 +2,12 @@
 
 A 2D space shooter game written in Go using the Ebiten game engine.
 
+## Play Online
+
+**[Play the game in your browser!](https://echosingh.github.io/space-shooter/)**
+
+The game runs directly in your browser using WebAssembly - no installation needed!
+
 ## How to Play
 
 The goal is simple: shoot down enemy ships, avoid getting hit, and rack up points. The game gets progressively harder as you survive longer.
