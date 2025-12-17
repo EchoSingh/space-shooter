@@ -7,6 +7,9 @@ import (
 )
 
 func TestNewPlayer(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping test in short mode (CI environment)")
+	}
 	player := NewPlayer(100, 100, 800, 600)
 
 	if player == nil {
@@ -27,6 +30,9 @@ func TestNewPlayer(t *testing.T) {
 }
 
 func TestPlayerMovement(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping test in short mode (CI environment)")
+	}
 	player := NewPlayer(100, 100, 800, 600)
 	initialPos := player.GetPosition()
 
@@ -39,11 +45,14 @@ func TestPlayerMovement(t *testing.T) {
 }
 
 func TestPlayerBoundaries(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping test in short mode (CI environment)")
+	}
 	player := NewPlayer(10, 10, 800, 600)
 
 	// Try to move off screen
 	player.Position = vector.New(-100, -100)
-	player.Update(0.016)
+	_ = player.Update(0.016)
 
 	pos := player.GetPosition()
 	if pos.X < 0 || pos.Y < 0 {
@@ -52,6 +61,9 @@ func TestPlayerBoundaries(t *testing.T) {
 }
 
 func TestPlayerWeapon(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping test in short mode (CI environment)")
+	}
 	player := NewPlayer(100, 100, 800, 600)
 
 	// Update weapon time so it can fire
@@ -70,6 +82,9 @@ func TestPlayerWeapon(t *testing.T) {
 }
 
 func TestPlayerHealth(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping test in short mode (CI environment)")
+	}
 	player := NewPlayer(100, 100, 800, 600)
 
 	initialHealth := player.Health.Current
@@ -90,6 +105,9 @@ func TestPlayerHealth(t *testing.T) {
 }
 
 func TestPlayerScore(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping test in short mode (CI environment)")
+	}
 	player := NewPlayer(100, 100, 800, 600)
 
 	if player.GetScore() != 0 {
@@ -108,9 +126,12 @@ func TestPlayerScore(t *testing.T) {
 }
 
 func BenchmarkPlayerUpdate(b *testing.B) {
+	if testing.Short() {
+		b.Skip("Skipping benchmark in short mode (CI environment)")
+	}
 	player := NewPlayer(100, 100, 800, 600)
 
 	for i := 0; i < b.N; i++ {
-		player.Update(0.016)
+		_ = player.Update(0.016)
 	}
 }
