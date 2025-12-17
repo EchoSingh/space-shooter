@@ -42,3 +42,7 @@ game.log
 
 # Assets that shouldn't be tracked (if generated)
 assets/generated/
+
+# WASM build outputs (keep web/index.html but ignore generated files)
+web/game.wasm
+web/wasm_exec.js
