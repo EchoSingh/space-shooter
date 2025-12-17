@@ -206,7 +206,7 @@ func (g *Game) updatePlaying(dt float64) {
 	g.checkCollisions()
 
 	// Check game over
-	if g.player.Health.IsDead() {
+	if g.player != nil && g.player.Health != nil && g.player.Health.IsDead() {
 		g.stateManager.SetState(engine.StateGameOver)
 	}
 
@@ -323,6 +323,11 @@ func (g *Game) checkCollisions() {
 }
 
 func (g *Game) handleCollision(a, b entities.Entity) {
+	// Safety check
+	if a == nil || b == nil {
+		return
+	}
+
 	// Bullet vs Enemy
 	if a.GetType() == entities.TypeBullet && b.GetType() == entities.TypeEnemy {
 		bullet := a.(*entities.Bullet)
@@ -332,13 +337,14 @@ func (g *Game) handleCollision(a, b entities.Entity) {
 			enemy.TakeDamage(bullet.GetDamage())
 			bullet.SetActive(false)
 
-			if !enemy.IsActive() {
+			if !enemy.IsActive() && g.player != nil {
 				g.player.AddScore(enemy.ScoreValue)
 				g.spawnExplosion(enemy.GetPosition())
 			}
 		}
 	} else if a.GetType() == entities.TypeEnemy && b.GetType() == entities.TypeBullet {
 		g.handleCollision(b, a)
+		return
 	}
 
 	// Player vs Enemy
@@ -346,11 +352,14 @@ func (g *Game) handleCollision(a, b entities.Entity) {
 		player := a.(*entities.Player)
 		enemy := b.(*entities.Enemy)
 
-		player.Health.Damage(20)
+		if player != nil && player.Health != nil {
+			player.Health.Damage(20)
+		}
 		enemy.SetActive(false)
 		g.spawnExplosion(enemy.GetPosition())
 	} else if a.GetType() == entities.TypeEnemy && b.GetType() == entities.TypePlayer {
 		g.handleCollision(b, a)
+		return
 	}
 }
 
