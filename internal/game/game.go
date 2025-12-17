@@ -178,10 +178,18 @@ func (g *Game) updatePlaying(dt float64) {
 	// Update stars
 	g.updateStars(dt)
 
+	// Check game over first
+	if g.player != nil && g.player.Health != nil && g.player.Health.IsDead() {
+		g.stateManager.SetState(engine.StateGameOver)
+		return
+	}
+
 	// Update player
-	if err := g.player.Update(dt); err != nil {
-		// Log error but continue game
-		_ = err
+	if g.player != nil {
+		if err := g.player.Update(dt); err != nil {
+			// Log error but continue game
+			_ = err
+		}
 	}
 
 	// Handle player firing
@@ -204,11 +212,6 @@ func (g *Game) updatePlaying(dt float64) {
 
 	// Check collisions
 	g.checkCollisions()
-
-	// Check game over
-	if g.player != nil && g.player.Health != nil && g.player.Health.IsDead() {
-		g.stateManager.SetState(engine.StateGameOver)
-	}
 
 	// Increase difficulty over time
 	g.difficulty = 1.0 + g.gameTime/30.0

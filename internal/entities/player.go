@@ -144,17 +144,21 @@ func (p *Player) drawHealthBar(screen *ebiten.Image) {
 
 	// Health
 	healthWidth := barWidth * p.Health.GetPercentage()
-	healthColor := color.RGBA{R: 100, G: 255, B: 100, A: 255}
-	if p.Health.GetPercentage() < 0.3 {
-		healthColor = color.RGBA{R: 255, G: 100, B: 100, A: 255}
-	} else if p.Health.GetPercentage() < 0.6 {
-		healthColor = color.RGBA{R: 255, G: 255, B: 100, A: 255}
+	
+	// Only draw health bar if there's health remaining
+	if healthWidth > 0 {
+		healthColor := color.RGBA{R: 100, G: 255, B: 100, A: 255}
+		if p.Health.GetPercentage() < 0.3 {
+			healthColor = color.RGBA{R: 255, G: 100, B: 100, A: 255}
+		} else if p.Health.GetPercentage() < 0.6 {
+			healthColor = color.RGBA{R: 255, G: 255, B: 100, A: 255}
+		}
+		healthImg := ebiten.NewImage(int(healthWidth), int(barHeight))
+		healthImg.Fill(healthColor)
+		healthOp := &ebiten.DrawImageOptions{}
+		healthOp.GeoM.Translate(x, y)
+		screen.DrawImage(healthImg, healthOp)
 	}
-	healthImg := ebiten.NewImage(int(healthWidth), int(barHeight))
-	healthImg.Fill(healthColor)
-	healthOp := &ebiten.DrawImageOptions{}
-	healthOp.GeoM.Translate(x, y)
-	screen.DrawImage(healthImg, healthOp)
 }
 
 // IsFiring returns whether the player is firing
